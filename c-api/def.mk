@@ -1,6 +1,6 @@
 # Definições de variáveis de uso em todos os makefiles
 
-FLAGS=-ggdb3 -Wall -Werror
+FLAGS=-ggdb3 -Wall -Werror -std=c99
 
 SRCDIR=src
 OBJDIR=obj

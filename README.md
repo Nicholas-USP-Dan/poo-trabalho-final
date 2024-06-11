@@ -13,8 +13,21 @@ A cada conexão, um novo arquivo é criado onde somente ela pode modificar o arq
 ### Características
 
 * As alterações são aplicadas somente ao fim da interação, logo caso o usuário abra um outro arquivo sem salvar as alterações, elas são perdidas
-* alskdjflaskjflkasdjf
 
-## Configurações Iniciais
+## Configuração
 
-Blablabla
+### Pré-requisitos
+
+* Java (coloque alguma versão)
+* Python (coloque alguma versão)
+* GCC (coloque alguma versão)
+* [Make](https://www.gnu.org/software/make/)
+
+Para compilar o programa em C, execute os comandos:
+
+```
+cd c-api
+make build
+```
+
+Para rodar o server em Python, execute os comandos:
