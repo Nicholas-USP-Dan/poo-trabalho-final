@@ -1,6 +1,5 @@
-programaTrab
-doxygen/
-bin/*
-obj/*
-unit-tests/bin/*
-unit-tests/out/*
+c-api/doxygen/
+c-api/bin/*
+c-api/obj/*
+c-api/unit-tests/bin/*
+c-api/unit-tests/out/*
