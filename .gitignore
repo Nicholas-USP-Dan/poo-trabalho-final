@@ -1,0 +1,6 @@
+programaTrab
+doxygen/
+bin/*
+obj/*
+unit-tests/bin/*
+unit-tests/out/*
