@@ -34,7 +34,7 @@ const int32_t nro_regarq, const int32_t nro_regrem, FILE *data_fptr){
 int check_status(FILE *data_fptr){
     char status;
     fread(&status, 1, 1, data_fptr);
-    if(status != '1') errno = 5; // Atribui errno como EIO 5 Input/output error
+    if(status != '1') errno = 77; // Atribui errno como EBADFD 77 File descriptor in bad state
     return status == '1';
 }
 

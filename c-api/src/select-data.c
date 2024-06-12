@@ -29,7 +29,6 @@ int select_data(FILE *data_fptr, JOGADOR where){ // Seria legal se essa função
 
     // Pular o cabecalho
     fseek(data_fptr, HEADER_END_OFFSET, SEEK_SET);
-    // fseek(data_fptr, HEADER_END_OFFSET-NRO_REGARQ_OFFSET, SEEK_CUR);
 
     // Lê registros até ler todos os registros válidos
     while(1){
@@ -58,7 +57,6 @@ int select_data(FILE *data_fptr, JOGADOR where){ // Seria legal se essa função
             filter_count++;
 
             print_jogador(j);
-            printf("\n");
         }
 
         free_jogador(&j);
