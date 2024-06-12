@@ -42,24 +42,15 @@ void free_jogador(JOGADOR *j){
 }
 
 void print_jogador(const JOGADOR j){
-    // printf("ID: %" PRId32 "\n", j.id);
+    printf("%" PRId32 ",", j.id);
+    if(j.idade != -1){
+        printf("%" PRId32, j.idade);
+    }
+    printf(",");
 
-    // printf("Idade: ");
-    // if(j.id != -1){
-    //     printf("SEM DADO\n");
-    // }
-    // else{
-    //     printf("%" PRId32 "\n", j.idade);
-    // }
-
-    char *nome = strcmp(j.nome, "") != 0 ? j.nome : "SEM DADO";
-    printf("Nome do Jogador: %s\n", nome);
-
-    char *nac = strcmp(j.nac, "") != 0 ? j.nac : "SEM DADO";
-    printf("Nacionalidade do Jogador: %s\n", nac);
-
-    char *clube = strcmp(j.clube, "") != 0 ? j.clube : "SEM DADO";
-    printf("Clube do Jogador: %s\n", clube);
+    printf("%s,", j.nome);
+    printf("%s,", j.nac);
+    printf("%s\n", j.clube);
 }
 
 JOGADOR read_jogador_data(FILE *fptr){
