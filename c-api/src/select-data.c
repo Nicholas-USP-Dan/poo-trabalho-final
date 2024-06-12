@@ -30,6 +30,8 @@ int select_data(FILE *data_fptr, JOGADOR where){ // Seria legal se essa função
     // Pular o cabecalho
     fseek(data_fptr, HEADER_END_OFFSET, SEEK_SET);
 
+    printf("id,idade,nomeJogador,nacionalidade,nomeClube\n");
+
     // Lê registros até ler todos os registros válidos
     while(1){
         long reg_offset = ftell(data_fptr);
@@ -67,11 +69,6 @@ int select_data(FILE *data_fptr, JOGADOR where){ // Seria legal se essa função
         }
 
         fseek(data_fptr, reg_offset + reg_size, SEEK_SET);
-    }
-
-    // Imprimir: "Registro inexistente." caso nenhum registro passar pelo filtro
-    if(filter_count <= 0){
-        printf("Registro inexistente.\n\n");
     }
 
     return 0;
