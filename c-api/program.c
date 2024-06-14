@@ -6,16 +6,16 @@
 #include "src/utils/data-utils.h"
 #include "src/utils/cabecalho-utils.h"
 
-#define OP_QUANT
-
-const char* OP_NAME[OP_QUANT] = {
+const char* OP_NAME[] = {
+    "create",
     "select",
     "modify",
     "insert",
     "delete",
 };
 
-const char* OP_DESC[OP_QUANT] = {
+const char* OP_DESC[] = {
+    "Cria um novo arquivo (de dados ou de índice)",
     "Seleciona registros de um arquivo de dados com base em um critério",
     "Modifica um registro em um arquivo de dados",
     "Insere um registro em um arquivo de dados",
@@ -31,6 +31,8 @@ static int help_print_op(){
     return 0;
 }
 
+// TODO: Fazer interação direta dos comandos, somente o select e create são chamados com frequência e devem dar uma saída imediata,
+// o restante só é chamado no final da execução
 int main(int argc, char** argv){
     if(argc < 2){
         fprintf(stderr, "Argumentos insuficientes!\n");
@@ -63,12 +65,22 @@ int main(int argc, char** argv){
         fclose(data_fptr);
     }
     else if(strcmp(operation, "delete")){
-        if(argc < 3){
+        if(argc < 4){
             fprintf(stderr, "Argumentos insuficientes!\n");
             return EXIT_FAILURE;
         }
 
+        char* data_filename = argv[2];
+        char* index_filename = argv[3];
+        FILE* data_fptr, *index_fptr;
 
+        if(!(data_fptr = fopen(data_filename, "r+b")) || !check_status(data_fptr) ||
+        !(index_fptr = fopen(index_filename, "w"))){
+            perror("Erro ao abrir o arquivo: ");
+            return EXIT_FAILURE;
+        }
+
+        // JOGADOR j_query = read_query();
     }
     else{
         fprintf(stderr, "Operação %s inválida\n", operation);
