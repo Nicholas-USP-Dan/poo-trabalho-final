@@ -1,11 +1,11 @@
 {
     "operation": "EDIT",
-    "id": 723653,
+    "id": 261529,
     "newData": {
-        "id": 723653,
-        "idade": 40,
-        "nomeJogador": "Carlos Eduardo",
-        "nacionalidade": "Brazil",
-        "nomeClube": "Palmeiras"
+        "id": 261529,
+        "idade": 25,
+        "nomeJogador": "D. FOMAN",
+        "nacionalidade": "RUSSIA",
+        "nomeClube": ""
     }
 }

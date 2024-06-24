@@ -115,7 +115,7 @@ int main(int argc, char** argv){
         fclose(data_fptr);
     }
     else if(strcmp(operation, "edit") == 0){
-        if(argc < 4){
+        if(argc < 5){
             fprintf(stderr, "Argumentos insuficientes!\n");
             return EXIT_FAILURE;
         }
@@ -157,23 +157,42 @@ int main(int argc, char** argv){
         fclose(data_fptr);
         fclose(index_fptr);
     }
-    else if(strcmp(operation, "delete")){
-        if(argc < 4){
+    else if(strcmp(operation, "delete") == 0){
+        if(argc < 5){
             fprintf(stderr, "Argumentos insuficientes!\n");
             return EXIT_FAILURE;
         }
 
         char* data_filename = argv[2];
         char* index_filename = argv[3];
-        FILE* data_fptr, *index_fptr;
+        FILE *data_fptr, *index_fptr;
 
-        if(!(data_fptr = fopen(data_filename, "r+b")) || !check_status(data_fptr) ||
-        !(index_fptr = fopen(index_filename, "w"))){
+        if(!(data_fptr = fopen(data_filename, "rb+")) || !check_status(data_fptr) ||
+        !(index_fptr = fopen(index_filename, "rb+")) || !check_status(index_fptr)){
             perror("Erro ao abrir o arquivo: ");
             return EXIT_FAILURE;
         }
 
-        // JOGADOR j_query = read_query();
+        DYN_ARRAY *index_arr = load_index(index_fptr);
+        REM_LIST *rem_list = load_rem_list(data_fptr, BEST_FIT);
+
+        int32_t rem_id;
+        sscanf(argv[4], "%" PRId32, &rem_id);
+
+        // select_data(data_fptr, j_query);
+
+        // Deleta usando somente o id
+        JOGADOR old_j_query = jNil;
+        old_j_query.id = rem_id;
+
+        int quant_rem;
+        delete_data(data_fptr, old_j_query, &quant_rem, &rem_list, &index_arr);
+
+        write_rem_list(&rem_list, data_fptr);
+        write_index(&index_arr, index_fptr);
+
+        fclose(data_fptr);
+        fclose(index_fptr);
     }
     else{
         fprintf(stderr, "Operação %s inválida\n", operation);

@@ -4,11 +4,13 @@ import json
 import socket
 import threading
 import secrets
+import os
 
 # Chamada da função create na API do arquivo
 def C_create(req, session_tok: str):
-    print(f"[CREATING FILE] Creating data-{session_tok}.bin")
+    print(f"[CREATING FILE] Creating data-{session_tok}.bin and indice-{session_tok}.bin")
     p = subprocess.run(["c-api/bin/program", "create", f"c-api/{req["database"]}", f"data-{session_tok}.bin", f"indice-{session_tok}.bin"])
+    
     if p.returncode != 0:
         print("Erro durante execução de criação do arquivo!")
         return
@@ -24,8 +26,10 @@ def C_select(req, session_tok: str):
                 f"{ query["nacionalidade"] if query["nacionalidade"] else "NULO" } "
                 f"{ query["nomeClube"] if query["nomeClube"] else "NULO" }"
                 )
+            
     with open(f'select-out-{session_tok}.csv', 'w+') as csv_file, open(f'select-out-{session_tok}.json', 'w') as json_file:
         p = subprocess.run(["c-api/bin/program", "select", f"data-{session_tok}.bin"], input=req_query.encode('utf-8'), stdout=csv_file)
+        
         if p.returncode != 0:
             print("Erro durante execução de criação do arquivo!")
             return
@@ -38,19 +42,25 @@ def C_select(req, session_tok: str):
 
         print("Enviar arquivo para a interface")
 
+        if os.path.exists(f"select-out-{session_tok}.csv"):
+            os.remove(f"select-out-{session_tok}.csv")
+        if os.path.exists(f"select-out-{session_tok}.json"):
+            os.remove(f"select-out-{session_tok}.json")
+
         print("Comando executado com sucesso")
 
 # Chamada da função edit na API do arquivo
 def C_edit(req, session_tok: str):
-    query = req["query"]
-    req_query = (f"{ query["id"] } "
-                f"{ query["idade"] if query["idade"] >= 0 else "NULO" } "
-                f"{ query["nomeJogador"] if query["nomeJogador"] else "NULO" } " 
-                f"{ query["nacionalidade"] if query["nacionalidade"] else "NULO" } "
-                f"{ query["nomeClube"] if query["nomeClube"] else "NULO" }"
+    newData = req["newData"]
+    req_query = (f"{ newData["id"] } "
+                f"{ newData["idade"] if newData["idade"] >= 0 else "NULO" } "
+                f"{ newData["nomeJogador"] if newData["nomeJogador"] else "NULO" } " 
+                f"{ newData["nacionalidade"] if newData["nacionalidade"] else "NULO" } "
+                f"{ newData["nomeClube"] if newData["nomeClube"] else "NULO" }"
                 )
                 
-    p = subprocess.run(["c-api/bin/program", "edit", f"data-{session_tok}.bin", f"indice-{session_tok}.bin", f"{query["id"]}"], input=req_query.encode('utf-8'))
+    p = subprocess.run(["c-api/bin/program", "edit", f"data-{session_tok}.bin", f"indice-{session_tok}.bin", f"{req["id"]}"], input=req_query.encode('utf-8'))
+    
     if p.returncode != 0:
         print("Erro durante execução de criação do arquivo!")
         return
@@ -59,7 +69,13 @@ def C_edit(req, session_tok: str):
 
 # Chamada da função delete na API do arquivo
 def C_delete(req, session_tok: str):
-    print("hi")
+    p = subprocess.run(["c-api/bin/program", "delete", f"data-{session_tok}.bin", f"indice-{session_tok}.bin", f"{req["id"]}"])
+
+    if p.returncode != 0:
+        print("Erro durante execução de criação do arquivo!")
+        return
+
+    print("Comando executado com sucesso")
 
 c_calls = {
     "CREATE": C_create,
@@ -83,6 +99,12 @@ def handle_client_thread(conn: socket.socket, addr, session_tok: str):
             op = resp["operation"]
             if op == "CLOSE":
                 print(f"[CLOSE CONNECTION] Close connection with {addr}")
+
+                # if os.path.exists(f"data-{session_tok}.bin"):
+                #     os.remove(f"data-{session_tok}.bin")
+                # if os.path.exists(f"indice-{session_tok}.bin"):
+                #     os.remove(f"indice-{session_tok}.bin")
+
                 conn.close()
                 return
             elif op in c_calls:
@@ -101,7 +123,7 @@ def handle_client_thread(conn: socket.socket, addr, session_tok: str):
 print("[STARTING] Starting server...")
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.bind(('127.0.0.1', 5050))
+    s.bind(('127.0.0.1', 5051))
     s.listen()
     while True:
         conn, addr = s.accept()
